@@ -17,6 +17,17 @@ test.before(async () => {
 
 test.after(() => new Promise((resolve) => server.close(resolve)));
 
+test('POST includes a Location header pointing at the created note', async () => {
+  const created = await fetch(`${base}/notes`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ title: 'located', body: '' }),
+  });
+  assert.strictEqual(created.status, 201);
+  const note = await created.json();
+  assert.strictEqual(created.headers.get('location'), `/notes/${note.id}`);
+});
+
 test('DELETE removes an existing note and then reports it missing', async () => {
   const created = await fetch(`${base}/notes`, {
     method: 'POST',

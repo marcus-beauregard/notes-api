@@ -22,7 +22,8 @@ app.post('/notes', (req, res) => {
   if (body !== undefined && typeof body !== 'string') {
     return res.status(400).json({ error: 'body must be a string' });
   }
-  res.status(201).json(db.create(title, body || ''));
+  const note = db.create(title, body || '');
+  res.location(`/notes/${note.id}`).status(201).json(note);
 });
 
 app.get('/notes/:id', (req, res) => {
