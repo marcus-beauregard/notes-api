@@ -75,3 +75,15 @@ test('POST rejects a non-string body with 400 instead of a driver 500', async ()
   assert.strictEqual(bad.status, 400);
   assert.deepStrictEqual(await bad.json(), { error: 'body must be a string' });
 });
+
+test('POST rejects an empty or whitespace-only title with 400', async () => {
+  for (const title of ['', '   ']) {
+    const bad = await fetch(`${base}/notes`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title, body: 'content' }),
+    });
+    assert.strictEqual(bad.status, 400);
+    assert.deepStrictEqual(await bad.json(), { error: 'title is required' });
+  }
+});

@@ -19,6 +19,9 @@ app.post('/notes', (req, res) => {
   if (typeof title !== 'string') {
     return res.status(400).json({ error: 'title must be a string' });
   }
+  if (!title.trim()) {
+    return res.status(400).json({ error: 'title is required' });
+  }
   if (body !== undefined && typeof body !== 'string') {
     return res.status(400).json({ error: 'body must be a string' });
   }
